@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8"/>
+    <title></title>
+</head>
+<body>
+    <table >
+        <tr th:each= "day : ${month}">
+            <td th:text = ${day}></td>
+            <td th:if="(${day}==${date})" th:text = ${entry.time}></td>
+            <td th:text = ${distance}></td>
+        </tr>
+    </table>
+</body>
+</html>
+    

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8"/>
+    <title></title>
+</head>
+<body>
+    <form th:action="@{/monthly}" method="post">
+        <label>Date
+            <input type="text" name="date">
+        </label>
+        <label>Today
+            <input type="checkbox" name="today">
+        </label>
+        <label>Time in Minutes
+            <input type="number" name="time">
+        </label>
+        <label>Distance
+            <input type="number" name="distance">
+        </label>
+        <input type="submit">
+    </form>
+
+</body>
+</html>
+    
