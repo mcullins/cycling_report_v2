@@ -1,6 +1,7 @@
 package com.cyclingrecord.models;
 
 
+import java.util.Objects;
 
 public class Entry {
     private String date;
@@ -52,6 +53,19 @@ public class Entry {
 
     public int getId() {
         return id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Entry entry = (Entry) o;
+        return Objects.equals(date, entry.date);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(date);
     }
 }
 

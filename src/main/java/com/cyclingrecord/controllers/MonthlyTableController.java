@@ -34,8 +34,14 @@ public class MonthlyTableController {
     }
 
     @RequestMapping("monthly")
-    public String showMonthlyTable(Model model, Entry newEntry){
-        EntryData.add(newEntry);
+    public String showMonthlyTable(Model model, Entry newEntry, String date){
+
+        for (int i=0; i <= getCurrentMonth().size()-1; i++){
+            if (getCurrentMonth().get(i).equals(date)){
+   //             EntryData.add(newEntry);
+            }
+        }
+
         model.addAttribute("month", getCurrentMonth());
         return "monthly";
     }

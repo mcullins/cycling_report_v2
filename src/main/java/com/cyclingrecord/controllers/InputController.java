@@ -14,13 +14,13 @@ public class InputController {
 
     @RequestMapping()
     public String inputForm(Model model){
-        model.addAttribute(new Entry());
+ //       model.addAttribute(new Entry());
         return "form";
     }
 
     @PostMapping()
     public String processInput(Model model, Entry newEntry){
-        EntryData.add(newEntry);
+   //     EntryData.add(newEntry);
         return "monthly";
     }
 }
