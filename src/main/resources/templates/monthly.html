@@ -5,11 +5,14 @@
     <title></title>
 </head>
 <body>
+    <a th:href="@{/form}">Return to Entry Form</a>
     <table >
         <tr th:each= "day : ${month}">
             <td th:text = ${day}></td>
-            <td th:text = ${entry.time}></td>
-            <td th:text = ${entry.distance}></td>
+            <th:block th:if="${entry.date == day}">
+                <td th:text = ${entry.time}></td>
+                <td th:text = ${entry.distance}></td>
+            </th:block>
         </tr>
     </table>
 </body>
