@@ -7,9 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.text.DateFormatSymbols;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -17,30 +15,25 @@ import java.util.*;
 @Controller
 public class MonthlyTableController {
 
-
-    static public ArrayList<String> getCurrentMonth(){
+    static public ArrayList<Entry> getCurrentMonth(){
         int month = Calendar.MONTH;
         YearMonth currentMonth = YearMonth.of(2020, month);
         Locale locale = Locale.US;
         DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MMM", locale);
-        ArrayList<String> outputs = new ArrayList<>();
+        ArrayList<Entry> outputs = new ArrayList<>();
         for (int i = 1; i <= currentMonth.lengthOfMonth(); i++){
             LocalDate ld = currentMonth.atDay(i);
-            String output = ld.format(format);
-            outputs.add(output);
-
+            String date = ld.format(format);
+            Date output = (Date) format.parse(date);
+            Entry entries = new Entry();
+            entries.setDate(output);
+            outputs.add(entries);
         }
         return outputs;
     }
 
     @RequestMapping("monthly")
-    public String showMonthlyTable(Model model, Entry newEntry, String date){
-
-//        for (int i=0; i <= getCurrentMonth().size()-1; i++){
-//            if (getCurrentMonth().get(i).equals(date)){
-//                EntryData.add(newEntry);
-//            }
-//        }
+    public String showMonthlyTable(Model model){
 
         model.addAttribute("month", getCurrentMonth());
         return "monthly";

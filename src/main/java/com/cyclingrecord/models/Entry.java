@@ -1,10 +1,11 @@
 package com.cyclingrecord.models;
 
 
+import java.util.Date;
 import java.util.Objects;
 
 public class Entry {
-    private String date;
+    private Date date;
     private int speed;
     private int time;
     private int distance;
@@ -16,18 +17,18 @@ public class Entry {
         nextId++;
     }
 
-    public Entry(String date, int time, int distance){
+    public Entry(Date date, int time, int distance){
         this.date = date;
         this.speed = distance/(time/60);
         this.time = time;
         this.distance = distance;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
@@ -67,5 +68,6 @@ public class Entry {
     public int hashCode() {
         return Objects.hash(date);
     }
+
 }
 
