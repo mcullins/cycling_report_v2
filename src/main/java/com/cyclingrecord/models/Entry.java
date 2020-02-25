@@ -17,8 +17,13 @@ public class Entry {
         nextId++;
     }
 
-    public Entry(Date date, int time, int distance){
+    public Entry(Date date){
+        this();
         this.date = date;
+    }
+
+    public Entry(Date date, int time, int distance){
+        this();
         this.speed = distance/(time/60);
         this.time = time;
         this.distance = distance;

@@ -7,8 +7,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -19,14 +22,14 @@ public class MonthlyTableController {
         int month = Calendar.MONTH;
         YearMonth currentMonth = YearMonth.of(2020, month);
         Locale locale = Locale.US;
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MMM", locale);
+        SimpleDateFormat format = new SimpleDateFormat("dd-MMM", locale);
         ArrayList<Entry> outputs = new ArrayList<>();
         for (int i = 1; i <= currentMonth.lengthOfMonth(); i++){
             LocalDate ld = currentMonth.atDay(i);
-            String date = ld.format(format);
-            Date output = (Date) format.parse(date);
-            Entry entries = new Entry();
-            entries.setDate(output);
+            ZoneId defaultZoneId = ZoneId.systemDefault();
+            Date output = Date.from(ld.atStartOfDay(defaultZoneId).toInstant());
+            Date dt = format.parse(format.format(output));
+            Entry entries = new Entry(output);
             outputs.add(entries);
         }
         return outputs;
