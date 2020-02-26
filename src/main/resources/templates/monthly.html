@@ -7,12 +7,10 @@
 <body>
     <a th:href="@{/}">Return to Entry Form</a>
     <table >
-        <tr th:each= "day : ${month}">
-            <td th:text = ${day.date}></td>
-            <th:block th:if="${day.equals(date)}">
-                <td th:text = ${entry.time}></td>
-                <td th:text = ${entry.distance}></td>
-            </th:block>
+        <tr th:each= "entry : ${entries}">
+            <td th:text = ${entry.date}></td>
+            <td th:text = ${entry.time}></td>
+            <td th:text = ${entry.distance}></td>
         </tr>
     </table>
 </body>

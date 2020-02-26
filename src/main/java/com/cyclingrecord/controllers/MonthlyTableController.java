@@ -1,45 +1,56 @@
 package com.cyclingrecord.controllers;
 
-import ch.qos.logback.classic.helpers.MDCInsertingServletFilter;
-import com.cyclingrecord.data.EntryData;
+
 import com.cyclingrecord.models.Entry;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+
 
 @Controller
 public class MonthlyTableController {
 
-    static public ArrayList<Entry> getCurrentMonth(){
-        int month = Calendar.MONTH;
-        YearMonth currentMonth = YearMonth.of(2020, month);
-        Locale locale = Locale.US;
-        SimpleDateFormat format = new SimpleDateFormat("dd-MMM", locale);
-        ArrayList<Entry> outputs = new ArrayList<>();
-        for (int i = 1; i <= currentMonth.lengthOfMonth(); i++){
+
+    public ArrayList<String> getMonth() {
+
+        ArrayList<String> monthString = new ArrayList<>();
+        int getMonth = Calendar.MONTH;
+        YearMonth currentMonth = YearMonth.of(2020, getMonth);
+
+        for (int i = 1; i <= currentMonth.lengthOfMonth(); i++) {
             LocalDate ld = currentMonth.atDay(i);
-            ZoneId defaultZoneId = ZoneId.systemDefault();
-            Date output = Date.from(ld.atStartOfDay(defaultZoneId).toInstant());
-            Date dt = format.parse(format.format(output));
-            Entry entries = new Entry(output);
-            outputs.add(entries);
+            DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MMM");
+
+            String dayString = ld.format(myFormatObj);
+
+            monthString.add(dayString);
         }
-        return outputs;
+        return monthString;
     }
+
 
     @RequestMapping("monthly")
-    public String showMonthlyTable(Model model){
+    public String showMonthlyTable(Model model, @RequestParam String date, @RequestParam int distance, @RequestParam int time){
+        ArrayList<Entry> entryList = new ArrayList<>();
 
-        model.addAttribute("month", getCurrentMonth());
+
+        for (int i = 0; i<getMonth().size(); i++){
+            Entry entries = new Entry();
+            entries.setDate(getMonth().get(i));
+            if(entries.getDate().equals("21-Feb")){
+                entries.setDistance(distance);
+                entries.setTime(time);
+            }
+            entryList.add(entries);
+        }
+
+        model.addAttribute("entries", entryList);
         return "monthly";
     }
-
 }

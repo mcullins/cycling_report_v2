@@ -1,11 +1,12 @@
 package com.cyclingrecord.models;
 
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
 public class Entry {
-    private Date date;
+    private String date;
     private int speed;
     private int time;
     private int distance;
@@ -17,23 +18,23 @@ public class Entry {
         nextId++;
     }
 
-    public Entry(Date date){
+    public Entry(String date){
         this();
         this.date = date;
     }
 
-    public Entry(Date date, int time, int distance){
+    public Entry(String date, int time, int distance){
         this();
         this.speed = distance/(time/60);
         this.time = time;
         this.distance = distance;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -66,13 +67,12 @@ public class Entry {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Entry entry = (Entry) o;
-        return Objects.equals(date, entry.date);
+        return id == entry.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(date);
+        return Objects.hash(id);
     }
-
 }
 
