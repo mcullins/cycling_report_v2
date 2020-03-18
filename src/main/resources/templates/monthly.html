@@ -7,10 +7,21 @@
 <body>
     <a th:href="@{/}">Return to Entry Form</a>
     <table >
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Speed</th>
+                <th>Time</th>
+                <th>Distance</th>
+                <th>Weekly Total</th>
+            </tr>
+        </thead>
         <tr th:each= "entry : ${entries}">
             <td th:text = ${entry.date}></td>
+            <td th:text = ${entry.speed}></td>
             <td th:text = ${entry.time}></td>
             <td th:text = ${entry.distance}></td>
+            <td th:text = ${totalDistance}></td>
         </tr>
     </table>
 </body>

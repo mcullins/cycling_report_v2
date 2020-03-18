@@ -13,10 +13,10 @@
             <input type="checkbox" name="today">
         </label>
         <label>Time in Minutes
-            <input type="number" th:field ="${entry.time}">
+            <input type="number" step="0.01" th:field ="${entry.time}">
         </label>
         <label>Distance
-            <input type="number" th:field ="${entry.distance}">
+            <input type="number" step="0.01" th:field ="${entry.distance}">
         </label>
         <input type="submit">
     </form>

@@ -1,31 +1,33 @@
 package com.cyclingrecord.models;
 
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import com.cyclingrecord.data.EntryRepository;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Objects;
 
+@Entity
 public class Entry {
-    private String date;
-    private int speed;
-    private int time;
-    private int distance;
-    private int id;
-    private int nextId = 1;
 
-    public Entry(){
-        this.id=nextId;
-        nextId++;
-    }
+    @Id
+    @GeneratedValue
+    private int id;
+
+    private String date;
+    private double speed;
+    private float time;
+    private float distance;
+
+    public Entry(){ }
 
     public Entry(String date){
-        this();
         this.date = date;
     }
 
-    public Entry(String date, int time, int distance){
+    public Entry(float time, float distance){
         this();
-        this.speed = distance/(time/60);
         this.time = time;
         this.distance = distance;
     }
@@ -38,23 +40,25 @@ public class Entry {
         this.date = date;
     }
 
-    public int getSpeed() {
+    public double getSpeed() {
         return speed;
     }
 
-    public int getTime() {
+    public void setSpeed(double speed) { this.speed = speed; }
+
+    public float getTime() {
         return time;
     }
 
-    public void setTime(int time) {
+    public void setTime(float time) {
         this.time = time;
     }
 
-    public int getDistance() {
+    public float getDistance() {
         return distance;
     }
 
-    public void setDistance(int distance) {
+    public void setDistance(float distance) {
         this.distance = distance;
     }
 
