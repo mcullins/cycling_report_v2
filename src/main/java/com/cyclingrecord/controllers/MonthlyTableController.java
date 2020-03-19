@@ -3,7 +3,6 @@ package com.cyclingrecord.controllers;
 
 import com.cyclingrecord.data.EntryRepository;
 import com.cyclingrecord.models.Entry;
-import com.cyclingrecord.models.SatTotal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,10 +10,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.lang.reflect.Array;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.Year;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -71,8 +68,8 @@ public class MonthlyTableController {
     public String showMonthlyTable(@ModelAttribute Entry entries, Model model, @RequestParam String date, @RequestParam float distance, @RequestParam float time) {
         LocalDate localDate = LocalDate.parse(date);
         String formatDate = formatDate(localDate);
-        SatTotal total = new SatTotal();
         ArrayList<Integer> weekdays = new ArrayList();
+
         for (int i = 0; i < getMonth().size(); i++) {
 
             double speed = Math.round((distance / (time / 60)) * 100.0) / 100.0;
@@ -130,22 +127,16 @@ public class MonthlyTableController {
 
             //   if (dayNumber==6) {
             //       total.setTotal(totalDistance);
-
         }
-
-    //
-
-for(int k = 0; k<getMonth().size(); k++) {
+        for(int j=0; j<getMonth().size(); j++) {
             ArrayList<LocalDate> month = getMonth();
-            DayOfWeek dayOfWeek = month.get(k).getDayOfWeek();
-    int dayNumber = dayOfWeek.getValue();
-    weekdays.add(dayNumber);
+            DayOfWeek dayOfWeek = month.get(j).getDayOfWeek();
+
+            int dayNumber = dayOfWeek.getValue();
+            weekdays.add(dayNumber);
+
+            model.addAttribute("totalDistance", weekdays);
         }
-
-
-            for(int j : weekdays){
-                model.addAttribute("totalDistance", j);
-            }
 
 
         model.addAttribute("entries", entryRepository.findAll());
