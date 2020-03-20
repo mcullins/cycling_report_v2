@@ -19,6 +19,7 @@ public class Entry {
     private double speed;
     private float time;
     private float distance;
+    private float totalDistance;
 
     public Entry(){ }
 
@@ -64,6 +65,14 @@ public class Entry {
 
     public int getId() {
         return id;
+    }
+
+    public float getTotalDistance() {
+        return totalDistance;
+    }
+
+    public void setTotalDistance(float totalDistance) {
+        this.totalDistance = totalDistance;
     }
 
     @Override

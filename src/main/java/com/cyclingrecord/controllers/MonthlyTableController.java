@@ -56,10 +56,10 @@ public class MonthlyTableController {
         return dateString;
     }
 
-    public Float sumDistance(ArrayList<Float> distance) {
-        Float sum = 0.0f;
-        for (int i = 0; i < distance.size(); i++) {
-            sum += distance.get(i);
+    public Float sumDistance(float distance) {
+        float sum = 0.0f;
+        for (int i = 0; i < getMonth().size(); i++) {
+            sum += distance;
         }
         return sum;
     }
@@ -80,12 +80,15 @@ public class MonthlyTableController {
                 Entry newEntry = new Entry();
                 newEntry.setDate(formatMonth().get(i));
 
+//                ArrayList<LocalDate> month = getMonth();
+//                DayOfWeek dayOfWeek = month.get(i).getDayOfWeek();
+//                int dayNumber = dayOfWeek.getValue();
+//                newEntry.setTotalDistance(dayNumber);
+
                 if (formatMonth().get(i).equals(formatDate)) {
                     newEntry.setDistance(distance);
                     newEntry.setTime(time);
                     newEntry.setSpeed(speed);
-
-
                 }
                 entryRepository.save(newEntry);
             } else {
@@ -93,55 +96,27 @@ public class MonthlyTableController {
                     existingDate.setTime(time);
                     existingDate.setDistance(distance);
                     existingDate.setSpeed(speed);
+
+                    DayOfWeek dayOfWeek = getMonth().get(i).getDayOfWeek();
+                    int dayNumber = dayOfWeek.getValue();
+                    weekdays.add(dayNumber);
+                    if (dayNumber == 6) {
+                        float sum = 0.0f;
+                        for (int j = 0; j <= getMonth().size(); j++) {
+                            sum += distance;
+
+                        }  existingDate.setTotalDistance(sum);
+                    }
                     entryRepository.save(existingDate);
                 }
 
 
-//                ArrayList<Float> sum = new ArrayList<>();
-//                Iterable<Entry> existingDistance = entryRepository.findAll();
-//                for (Entry e : existingDistance) {
-//                    sum.add(e.getDistance());
-//                }
-//                float totalDistance = sumDistance(sum);
-
+                model.addAttribute("entries", entryRepository.findAll());
             }
 
-            Calendar calendar = Calendar.getInstance();
-            int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-
-
-            ArrayList<Float> sum = new ArrayList<>();
-            Iterable<Entry> existingDistance = entryRepository.findAll();
-            for (Entry e : existingDistance) {
-                sum.add(e.getDistance());
-            }
-            float totalDistance = sumDistance(sum);
-
-
-//            DayOfWeek dayOfWeek = month.get(i).getDayOfWeek();
-//            int dayNumber = dayOfWeek.getValue();
-//            weekdays.add(dayNumber);
-//            for(int j : weekdays){
-//                model.addAttribute("totalDistance", j);
-//            }
-
-            //   if (dayNumber==6) {
-            //       total.setTotal(totalDistance);
         }
-        for(int j=0; j<getMonth().size(); j++) {
-            ArrayList<LocalDate> month = getMonth();
-            DayOfWeek dayOfWeek = month.get(j).getDayOfWeek();
-
-            int dayNumber = dayOfWeek.getValue();
-            weekdays.add(dayNumber);
-
-            model.addAttribute("totalDistance", weekdays);
-        }
-
-
-        model.addAttribute("entries", entryRepository.findAll());
-
-
         return "monthly";
     }
 }
+
+
