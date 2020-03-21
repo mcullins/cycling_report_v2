@@ -1,6 +1,5 @@
 package com.cyclingrecord.controllers;
 
-import com.cyclingrecord.data.EntryData;
 import com.cyclingrecord.models.Entry;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

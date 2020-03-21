@@ -1,39 +1,41 @@
 package com.cyclingrecord.models;
 
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Date;
 import java.util.Objects;
 
+@Entity
 public class Entry {
-    private Date date;
+    @Id
+    @GeneratedValue
+    private int id;
+
+    private String date;
     private int speed;
     private int time;
     private int distance;
-    private int id;
-    private int nextId = 1;
 
-    public Entry(){
-        this.id=nextId;
-        nextId++;
-    }
+    public Entry(){ }
 
-    public Entry(Date date){
-        this();
+    public Entry(String date){
         this.date = date;
     }
 
-    public Entry(Date date, int time, int distance){
+    public Entry(String date, int time, int distance){
         this();
         this.speed = distance/(time/60);
         this.time = time;
         this.distance = distance;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
