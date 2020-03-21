@@ -56,9 +56,15 @@ public class MonthlyTableController {
         return dateString;
     }
 
-    public Float sumDistance(float distance) {
+    public ArrayList<Float> getAllDistances(float distance){
+        ArrayList<Float> allDistances = new ArrayList<>();
+        allDistances.add(distance);
+        return allDistances;
+    }
+
+    public Float sumDistance(ArrayList<Float> distances) {
         float sum = 0.0f;
-        for (int i = 0; i < getMonth().size(); i++) {
+        for (float distance : distances) {
             sum += distance;
         }
         return sum;
@@ -97,15 +103,14 @@ public class MonthlyTableController {
                     existingDate.setDistance(distance);
                     existingDate.setSpeed(speed);
 
+                    ArrayList<Float> allDistances = new ArrayList<>();
+                    entryRepository.findAll().forEach((n)->allDistances.add(entries.getDistance()));
+
                     DayOfWeek dayOfWeek = getMonth().get(i).getDayOfWeek();
                     int dayNumber = dayOfWeek.getValue();
                     weekdays.add(dayNumber);
                     if (dayNumber == 6) {
-                        float sum = 0.0f;
-                        for (int j = 0; j <= getMonth().size(); j++) {
-                            sum += distance;
-
-                        }  existingDate.setTotalDistance(sum);
+                    existingDate.setTotalDistance(sumDistance(allDistances));
                     }
                     entryRepository.save(existingDate);
                 }
