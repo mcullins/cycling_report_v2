@@ -7,16 +7,16 @@
 <body>
     <form th:action="@{/monthly}" method="post">
         <label>Date
-            <input type="date" name="date">
+            <input type="date" th:field="${entry.date}">
         </label>
         <label>Today
             <input type="checkbox" name="today">
         </label>
         <label>Time in Minutes
-            <input type="number" name="time">
+            <input type="number" step="0.01" th:field ="${entry.time}">
         </label>
         <label>Distance
-            <input type="number" name="distance">
+            <input type="number" step="0.01" th:field ="${entry.distance}">
         </label>
         <input type="submit">
     </form>

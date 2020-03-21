@@ -1,22 +1,22 @@
 package com.cyclingrecord.models;
 
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.util.Date;
 import java.util.Objects;
 
 @Entity
 public class Entry {
+
     @Id
     @GeneratedValue
     private int id;
 
     private String date;
-    private int speed;
-    private int time;
-    private int distance;
+    private double speed;
+    private float time;
+    private float distance;
+    private float totalDistance;
 
     public Entry(){ }
 
@@ -24,9 +24,8 @@ public class Entry {
         this.date = date;
     }
 
-    public Entry(String date, int time, int distance){
+    public Entry(float time, float distance){
         this();
-        this.speed = distance/(time/60);
         this.time = time;
         this.distance = distance;
     }
@@ -39,23 +38,25 @@ public class Entry {
         this.date = date;
     }
 
-    public int getSpeed() {
+    public double getSpeed() {
         return speed;
     }
 
-    public int getTime() {
+    public void setSpeed(double speed) { this.speed = speed; }
+
+    public float getTime() {
         return time;
     }
 
-    public void setTime(int time) {
+    public void setTime(float time) {
         this.time = time;
     }
 
-    public int getDistance() {
+    public float getDistance() {
         return distance;
     }
 
-    public void setDistance(int distance) {
+    public void setDistance(float distance) {
         this.distance = distance;
     }
 
@@ -63,18 +64,25 @@ public class Entry {
         return id;
     }
 
+    public float getTotalDistance() {
+        return totalDistance;
+    }
+
+    public void setTotalDistance(float totalDistance) {
+        this.totalDistance = totalDistance;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Entry entry = (Entry) o;
-        return Objects.equals(date, entry.date);
+        return id == entry.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(date);
+        return Objects.hash(id);
     }
-
 }
 

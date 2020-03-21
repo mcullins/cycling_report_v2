@@ -1,20 +1,21 @@
 package com.cyclingrecord.controllers;
 
+
 import com.cyclingrecord.data.EntryRepository;
 import com.cyclingrecord.models.Entry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.lang.reflect.Array;
-import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+
 
 @Controller
 public class MonthlyTableController {
@@ -22,44 +23,100 @@ public class MonthlyTableController {
     @Autowired
     private EntryRepository entryRepository;
 
-    public EntryRepository getCurrentMonth(){
-        int month = Calendar.MONTH;
-        YearMonth currentMonth = YearMonth.of(2020, month+1);
-        ArrayList<Entry> outputs = new ArrayList<>();
-        for (int i = 1; i <= currentMonth.lengthOfMonth(); i++){
+    public ArrayList<LocalDate> getMonth() {
+        ArrayList<LocalDate> entireMonth = new ArrayList<>();
+        int getMonth = Calendar.MONTH + 1;
+        YearMonth currentMonth = YearMonth.of(2020, getMonth);
+        for (int i = 1; i < currentMonth.lengthOfMonth() + 1; i++) {
             LocalDate ld = currentMonth.atDay(i);
-            String formattedDate = ld.format(DateTimeFormatter.ofPattern("dd-MMM"));
-            Entry entries = new Entry(formattedDate);
-            entryRepository.save(entries);
+            entireMonth.add(ld);
         }
-        return entryRepository;
+        return entireMonth;
     }
 
-    public ArrayList<Entry> matchingFormatDate(){
-        int month = Calendar.MONTH;
-        YearMonth currentMonth = YearMonth.of(2020, month+1);
-        ArrayList<Entry> outputs = new ArrayList<>();
-        for (int i = 1; i <= currentMonth.lengthOfMonth(); i++){
-            LocalDate ld = currentMonth.atDay(i);
-            String formattedDate = ld.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            Entry entries = new Entry(formattedDate);
-            outputs.add(entries);
+    public String formatDate(LocalDate dateToFormat) {
+        LocalDate ld = dateToFormat;
+        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MMM");
+        String dayString = ld.format(myFormatObj);
+        return dayString;
+    }
+
+    public String formatDateToMatch(LocalDate dateToFormat) {
+        LocalDate ld = dateToFormat;
+        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String dayString = ld.format(myFormatObj);
+        return dayString;
+    }
+
+    public ArrayList<String> formatMonth() {
+        ArrayList<String> dateString = new ArrayList<>();
+        for (int i = 0; i <= getMonth().size() - 1; i++) {
+            dateString.add(formatDate(getMonth().get(i)));
         }
-        return outputs;
+        return dateString;
+    }
+
+    public Float sumDistance(float distance) {
+        float sum = 0.0f;
+        for (int i = 0; i < getMonth().size(); i++) {
+            sum += distance;
+        }
+        return sum;
     }
 
     @RequestMapping("monthly")
-    public String showMonthlyTable(Model model, @RequestParam String date, @RequestParam int time, @RequestParam int distance){
-        getCurrentMonth();
-        ArrayList<Entry> formatDates = matchingFormatDate();
-        for(int i=0; i<formatDates.size(); i++) {
-            if (date.equals(formatDates.get(i).getDate())){
-                entryRepository.findByDate(date).setDistance(distance);
-                entryRepository.findByDate(date).setTime(time);
+    public String showMonthlyTable(@ModelAttribute Entry entries, Model model, @RequestParam String date, @RequestParam float distance, @RequestParam float time) {
+        LocalDate localDate = LocalDate.parse(date);
+        String formatDate = formatDate(localDate);
+        ArrayList<Integer> weekdays = new ArrayList();
+
+        for (int i = 0; i < getMonth().size(); i++) {
+
+            double speed = Math.round((distance / (time / 60)) * 100.0) / 100.0;
+            Entry existingDate = entryRepository.findByDate(formatMonth().get(i));
+
+
+            if (existingDate == null || !existingDate.getDate().equals(formatMonth().get(i))) {
+                Entry newEntry = new Entry();
+                newEntry.setDate(formatMonth().get(i));
+
+//                ArrayList<LocalDate> month = getMonth();
+//                DayOfWeek dayOfWeek = month.get(i).getDayOfWeek();
+//                int dayNumber = dayOfWeek.getValue();
+//                newEntry.setTotalDistance(dayNumber);
+
+                if (formatMonth().get(i).equals(formatDate)) {
+                    newEntry.setDistance(distance);
+                    newEntry.setTime(time);
+                    newEntry.setSpeed(speed);
+                }
+                entryRepository.save(newEntry);
+            } else {
+                if (formatMonth().get(i).equals(formatDate)) {
+                    existingDate.setTime(time);
+                    existingDate.setDistance(distance);
+                    existingDate.setSpeed(speed);
+
+                    DayOfWeek dayOfWeek = getMonth().get(i).getDayOfWeek();
+                    int dayNumber = dayOfWeek.getValue();
+                    weekdays.add(dayNumber);
+                    if (dayNumber == 6) {
+                        float sum = 0.0f;
+                        for (int j = 0; j <= getMonth().size(); j++) {
+                            sum += distance;
+
+                        }  existingDate.setTotalDistance(sum);
+                    }
+                    entryRepository.save(existingDate);
+                }
+
+
+                model.addAttribute("entries", entryRepository.findAll());
             }
+
         }
-        model.addAttribute("entries", entryRepository);
         return "monthly";
     }
-
 }
+
+
