@@ -1,24 +1,35 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 <head>
-    <meta charset="UTF-8"/>
-    <title></title>
+    <h1 th:replace = "fragments :: head"></h1>
 </head>
-<body>
-    <form th:action="@{/monthly}" method="post">
+<body class="container">
+    <form th:action="@{/monthly}" method="post" class="form-group">
+         <div class="input-align">
         <label>Date
-            <input type="date" th:field="${entry.date}">
+            <input type="date" th:field="${entry.date}" class="form-control">
         </label>
+        </div>
+        <div class="input-align">
         <label>Today
-            <input type="checkbox" name="today">
+            <input type="checkbox" name="today" class="form-control">
         </label>
+        </div>
+        <div class="input-align">
         <label>Time in Minutes
-            <input type="number" step="0.01" th:field ="${entry.time}">
+            <input type="number" step="0.01" th:field ="${entry.time}" class="form-control">
         </label>
+        </div>
+        <div class="input-align">
         <label>Distance
-            <input type="number" step="0.01" th:field ="${entry.distance}">
+            <input type="number" step="0.01" th:field ="${entry.distance}" class="form-control">
         </label>
-        <input type="submit">
+        </div>
+        <div class="input-align">
+        <label>&nbsp;
+            <input type="submit" class="align-self-end btn btn-primary form-control">
+        </label>
+        </div>
     </form>
 
 </body>

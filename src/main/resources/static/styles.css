@@ -1,0 +1,14 @@
+body{
+    background-color: lightblue;
+}
+.form-group {
+    display: flex;
+    margin: 25px;
+}
+.input-align{
+    margin: 10px;
+}
+
+
+
+

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.sql.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -62,16 +63,16 @@ public class MonthlyTableController {
         return allDistances;
     }
 
-    public Float sumDistance(ArrayList<Float> distances) {
-        float sum = 0.0f;
-        for (float distance : distances) {
+    public Integer sumDistance(ArrayList<Integer> distances) {
+        int sum = 0;
+        for (int distance : distances) {
             sum += distance;
         }
         return sum;
     }
 
     @RequestMapping("monthly")
-    public String showMonthlyTable(@ModelAttribute Entry entries, Model model, @RequestParam String date, @RequestParam float distance, @RequestParam float time) {
+    public String showMonthlyTable(@ModelAttribute Entry entries, Model model, @RequestParam String date, @RequestParam float distance, @RequestParam float time) throws Exception {
         LocalDate localDate = LocalDate.parse(date);
         String formatDate = formatDate(localDate);
         ArrayList<Integer> weekdays = new ArrayList();
@@ -86,11 +87,6 @@ public class MonthlyTableController {
                 Entry newEntry = new Entry();
                 newEntry.setDate(formatMonth().get(i));
 
-//                ArrayList<LocalDate> month = getMonth();
-//                DayOfWeek dayOfWeek = month.get(i).getDayOfWeek();
-//                int dayNumber = dayOfWeek.getValue();
-//                newEntry.setTotalDistance(dayNumber);
-
                 if (formatMonth().get(i).equals(formatDate)) {
                     newEntry.setDistance(distance);
                     newEntry.setTime(time);
@@ -103,19 +99,40 @@ public class MonthlyTableController {
                     existingDate.setDistance(distance);
                     existingDate.setSpeed(speed);
 
-                    ArrayList<Float> allDistances = new ArrayList<>();
-                    entryRepository.findAll().forEach((n)->allDistances.add(entries.getDistance()));
-
-                    DayOfWeek dayOfWeek = getMonth().get(i).getDayOfWeek();
-                    int dayNumber = dayOfWeek.getValue();
-                    weekdays.add(dayNumber);
-                    if (dayNumber == 6) {
-                    existingDate.setTotalDistance(sumDistance(allDistances));
-                    }
                     entryRepository.save(existingDate);
                 }
+                DayOfWeek dayOfWeek = getMonth().get(i).getDayOfWeek();
+                int dayNumber = dayOfWeek.getValue();
+                weekdays.add(dayNumber);
+                if (dayNumber == 6) {
+                    ArrayList<Integer> allDistances = new ArrayList<>();
+
+                    try {
+                        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cyclingrecord", "cyclingrecord", "Hmveonl00");
+                        String sql = ("SELECT * FROM entry;");
+                        PreparedStatement ps = con.prepareStatement(sql);
+                        ResultSet rs = ps.executeQuery();
+                        rs.next();
+
+                         while (rs.relative(7)) {
+                             int distanceToSum = rs.getInt("distance");
+                             allDistances.add(distanceToSum);
+                         }
 
 
+                            int allDistancesTotal = sumDistance(allDistances);
+                            existingDate.setTotalDistance(allDistancesTotal);
+                            entryRepository.save(existingDate);
+
+
+                        rs.close();
+                        ps.close();
+                        con.close();
+                    } catch (SQLException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+
+                }
                 model.addAttribute("entries", entryRepository.findAll());
             }
 
