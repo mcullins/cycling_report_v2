@@ -7,12 +7,7 @@
     <form th:action="@{/monthly}" method="post" class="form-group">
          <div class="input-align">
         <label>Date
-            <input type="date" th:field="${entry.date}" class="form-control">
-        </label>
-        </div>
-        <div class="input-align">
-        <label>Today
-            <input type="checkbox" name="today" class="form-control">
+            <input type="date" th:field="${entry.date}" class="form-control" id="date-picker">
         </label>
         </div>
         <div class="input-align">
@@ -33,5 +28,6 @@
     </form>
 
 </body>
+<script type="text/javascript" th:src="@{/script.js}"></script>
 </html>
     

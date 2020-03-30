@@ -57,13 +57,7 @@ public class MonthlyTableController {
         return dateString;
     }
 
-    public ArrayList<Float> getAllDistances(float distance){
-        ArrayList<Float> allDistances = new ArrayList<>();
-        allDistances.add(distance);
-        return allDistances;
-    }
-
-    public Integer sumDistance(ArrayList<Integer> distances) {
+    public Integer sumDistance(List<Integer> distances) {
         int sum = 0;
         for (int distance : distances) {
             sum += distance;
@@ -105,24 +99,30 @@ public class MonthlyTableController {
                 int dayNumber = dayOfWeek.getValue();
                 weekdays.add(dayNumber);
                 if (dayNumber == 6) {
+                    String dayToCheck = formatDate(getMonth().get(i));
                     ArrayList<Integer> allDistances = new ArrayList<>();
 
                     try {
                         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cyclingrecord", "cyclingrecord", "Hmveonl00");
-                        String sql = ("SELECT * FROM entry;");
+                        String sql = ("SELECT * FROM entry");
                         PreparedStatement ps = con.prepareStatement(sql);
                         ResultSet rs = ps.executeQuery();
-                        rs.next();
 
-                         while (rs.relative(7)) {
-                             int distanceToSum = rs.getInt("distance");
-                             allDistances.add(distanceToSum);
-                         }
+                        while (rs.next()) {
+                            String dateToMatch = rs.getString("date");
+                            int distanceToSum = rs.getInt("distance");
+
+                                    allDistances.add(distanceToSum);
+                                    int allDistancesTotal = sumDistance(allDistances);
+
+                                    existingDate.setTotalDistance(allDistancesTotal);
+
+                                    entryRepository.save(existingDate);
+                             //   }
+
+                        }
 
 
-                            int allDistancesTotal = sumDistance(allDistances);
-                            existingDate.setTotalDistance(allDistancesTotal);
-                            entryRepository.save(existingDate);
 
 
                         rs.close();
