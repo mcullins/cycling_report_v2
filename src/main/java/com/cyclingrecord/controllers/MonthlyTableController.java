@@ -26,7 +26,7 @@ public class MonthlyTableController {
 
     public ArrayList<LocalDate> getMonth() {
         ArrayList<LocalDate> entireMonth = new ArrayList<>();
-        int getMonth = Calendar.MONTH + 1;
+        int getMonth = Calendar.getInstance().get(Calendar.MONTH) + 1;
         YearMonth currentMonth = YearMonth.of(2020, getMonth);
         for (int i = 1; i < currentMonth.lengthOfMonth() + 1; i++) {
             LocalDate ld = currentMonth.atDay(i);
@@ -77,7 +77,7 @@ public class MonthlyTableController {
             Entry existingDate = entryRepository.findByDate(formatMonth().get(i));
 
 
-            if (existingDate == null || !existingDate.getDate().equals(formatMonth().get(i))) {
+            if (existingDate == null || !formatMonth().get(i).equals(existingDate.getDate())) {
                 Entry newEntry = new Entry();
                 newEntry.setDate(formatMonth().get(i));
 

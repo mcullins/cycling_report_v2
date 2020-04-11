@@ -6,11 +6,8 @@ import javax.persistence.Id;
 import java.util.Objects;
 
 @Entity
-public class Entry {
+public class Entry extends AbstractEntity{
 
-    @Id
-    @GeneratedValue
-    private int id;
 
     private String date;
     private double speed;
@@ -60,9 +57,6 @@ public class Entry {
         this.distance = distance;
     }
 
-    public int getId() {
-        return id;
-    }
 
     public float getTotalDistance() {
         return totalDistance;
@@ -72,17 +66,6 @@ public class Entry {
         this.totalDistance = totalDistance;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Entry entry = (Entry) o;
-        return id == entry.id;
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }
 
