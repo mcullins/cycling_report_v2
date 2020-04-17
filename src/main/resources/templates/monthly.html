@@ -4,7 +4,8 @@
     <h1 th:replace = "fragments :: head"></h1>
 </head>
 <body>
-    <button type="button" class="btn btn-primary" onclick="window.location.href = '/';">Return to Entry Form</button>
+<nav th:replace="fragments :: navbar"></nav>
+    <button type="button" class="btn btn-primary" onclick="window.location.href = '/form';">Return to Entry Form</button>
     <table class="table table-sm table-bordered" >
         <thead class="thead-light">
             <tr>

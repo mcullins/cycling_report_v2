@@ -10,6 +10,21 @@
     </div>
 </head>
 <body>
+    <div th:fragment = "navbar">
+        <div class="navbar sticky-top navbar-dark bg-primary navbar-default">
+
+            <ul class="nav">
+                <li class="nav-item"><a class="nav-item" th:href="@{/monthly}">
+                    <img th:src="logo-via-logohub.png" height="40">
+                </a>
+                </li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/monthly}">Monthly Chart</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/}">Yearly Chart</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/}">Gallery</a></li>
+            </ul>
+            <span class="nav-item logout"><a class="nav-link" th:href="@{/logout}">Log Out</a></span>
+        </div>
+    </div>
 
 </body>
 </html>

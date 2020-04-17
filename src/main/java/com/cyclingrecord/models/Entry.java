@@ -1,9 +1,7 @@
 package com.cyclingrecord.models;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import java.util.Objects;
+
 
 @Entity
 public class Entry extends AbstractEntity{
@@ -11,8 +9,8 @@ public class Entry extends AbstractEntity{
 
     private String date;
     private double speed;
-    private float time;
-    private float distance;
+    private Float time;
+    private Float distance;
     private float totalDistance;
 
     public Entry(){ }
@@ -21,7 +19,7 @@ public class Entry extends AbstractEntity{
         this.date = date;
     }
 
-    public Entry(float time, float distance){
+    public Entry(Float time, Float distance){
         this();
         this.time = time;
         this.distance = distance;
@@ -45,20 +43,19 @@ public class Entry extends AbstractEntity{
         return time;
     }
 
-    public void setTime(float time) {
+    public void setTime(Float time) {
         this.time = time;
     }
 
-    public float getDistance() {
+    public Float getDistance() {
         return distance;
     }
 
-    public void setDistance(float distance) {
+    public void setDistance(Float distance) {
         this.distance = distance;
     }
 
-
-    public float getTotalDistance() {
+    public Float getTotalDistance() {
         return totalDistance;
     }
 

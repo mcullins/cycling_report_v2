@@ -1,7 +1,9 @@
 package com.cyclingrecord.controllers;
 
 import com.cyclingrecord.data.UserRepository;
+import com.cyclingrecord.models.Entry;
 import com.cyclingrecord.models.User;
+import com.cyclingrecord.models.dto.LoginFormDTO;
 import com.cyclingrecord.models.dto.RegisterFormDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -81,6 +83,40 @@ public class AuthenticationController {
     public String logout(HttpServletRequest request){
         request.getSession().invalidate();
         return "redirect:/login";
+    }
+
+    @GetMapping("/login")
+    public String displayLogin(Model model){
+        model.addAttribute("loginFormDTO", new LoginFormDTO());
+        return "login";
+    }
+
+    @PostMapping("/login")
+    public String processLoginForm(@ModelAttribute @Valid LoginFormDTO loginFormDTO,
+                                   Errors errors, HttpServletRequest request,
+                                   Model model) {
+
+        if (errors.hasErrors()) {
+            return "login";
+        }
+
+        User theUser = userRepository.findByUsername(loginFormDTO.getUsername());
+
+        if (theUser == null) {
+            errors.rejectValue("username", "user.invalid", "The given username does not exist");
+            return "login";
+        }
+
+        String password = loginFormDTO.getPassword();
+
+        if (!theUser.isMatchingPassword(password)) {
+            errors.rejectValue("password", "password.invalid", "Invalid password");
+            return "login";
+        }
+
+        setUserInSession(request.getSession(), theUser);
+        model.addAttribute(new Entry());
+        return "redirect:/monthly";
     }
 
 }

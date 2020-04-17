@@ -3,7 +3,9 @@
 <head>
     <h1 th:replace = "fragments :: head"></h1>
 </head>
-<body class="container">
+<body>
+<nav th:replace="fragments :: navbar"></nav>
+<div class="container">
     <form th:action="@{/monthly}" method="post" class="form-group">
          <div class="input-align">
         <label>Date
@@ -26,7 +28,7 @@
         </label>
         </div>
     </form>
-
+</div>
 </body>
 <script type="text/javascript" th:src="@{/script.js}"></script>
 </html>

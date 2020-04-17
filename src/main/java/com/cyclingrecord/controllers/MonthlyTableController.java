@@ -66,10 +66,15 @@ public class MonthlyTableController {
     }
 
     @RequestMapping("monthly")
-    public String showMonthlyTable(@ModelAttribute Entry entries, Model model, @RequestParam String date, @RequestParam float distance, @RequestParam float time) throws Exception {
-        LocalDate localDate = LocalDate.parse(date);
-        String formatDate = formatDate(localDate);
-        ArrayList<Integer> weekdays = new ArrayList();
+    public String showMonthlyTable(@ModelAttribute Entry entry, Model model, @RequestParam(required=false) String date, @RequestParam(required=false) Float distance, @RequestParam(required=false) Float time) throws Exception {
+
+
+        if(date == null || distance == null || time == null){
+            model.addAttribute("entries", entryRepository.findAll());
+        } else {
+            LocalDate localDate = LocalDate.parse(date);
+            String formatDate = formatDate(localDate);
+            ArrayList<Integer> weekdays = new ArrayList();
 
         for (int i = 0; i < getMonth().size(); i++) {
 
@@ -98,33 +103,29 @@ public class MonthlyTableController {
                 DayOfWeek dayOfWeek = getMonth().get(i).getDayOfWeek();
                 int dayNumber = dayOfWeek.getValue();
                 weekdays.add(dayNumber);
+
                 if (dayNumber == 6) {
+
                     String dayToCheck = formatDate(getMonth().get(i));
                     ArrayList<Integer> allDistances = new ArrayList<>();
 
+
                     try {
                         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cyclingrecord", "cyclingrecord", "Hmveonl00");
-                        String sql = ("SELECT * FROM entry");
+                        String sql = ("SELECT * FROM entry LIMIT 7");
                         PreparedStatement ps = con.prepareStatement(sql);
                         ResultSet rs = ps.executeQuery();
 
                         while (rs.next()) {
                             String dateToMatch = rs.getString("date");
                             int distanceToSum = rs.getInt("distance");
+                            allDistances.add(distanceToSum);
+                            int allDistancesTotal = sumDistance(allDistances);
 
-                                    allDistances.add(distanceToSum);
-                                    int allDistancesTotal = sumDistance(allDistances);
+                            existingDate.setTotalDistance(allDistancesTotal);
 
-                                    existingDate.setTotalDistance(allDistancesTotal);
-
-                                    entryRepository.save(existingDate);
-                             //   }
-
+                            entryRepository.save(existingDate);
                         }
-
-
-
-
                         rs.close();
                         ps.close();
                         con.close();
@@ -135,7 +136,7 @@ public class MonthlyTableController {
                 }
                 model.addAttribute("entries", entryRepository.findAll());
             }
-
+        }
         }
         return "monthly";
     }

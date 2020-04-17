@@ -4,7 +4,8 @@
 
 </head>
 <body>
-
+<nav th:replace="fragments :: navbar"></nav>
+<div class="container">
 <form method="post">
     <div class="form-group">
         <label>Username
@@ -26,6 +27,6 @@
 
     <input type="submit" class="btn btn-primary" value="Register"/>
 </form>
-
+</div>
 </body>
 </html>
