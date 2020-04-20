@@ -1,6 +1,7 @@
 package com.cyclingrecord.models;
 
 import javax.persistence.Entity;
+import java.time.LocalDate;
 
 
 @Entity
@@ -62,7 +63,6 @@ public class Entry extends AbstractEntity{
     public void setTotalDistance(float totalDistance) {
         this.totalDistance = totalDistance;
     }
-
 
 }
 

@@ -15,6 +15,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.IsoFields;
 import java.util.*;
 
 
@@ -65,16 +66,17 @@ public class MonthlyTableController {
         return sum;
     }
 
+
     @RequestMapping("monthly")
     public String showMonthlyTable(@ModelAttribute Entry entry, Model model, @RequestParam(required=false) String date, @RequestParam(required=false) Float distance, @RequestParam(required=false) Float time) throws Exception {
-
 
         if(date == null || distance == null || time == null){
             model.addAttribute("entries", entryRepository.findAll());
         } else {
             LocalDate localDate = LocalDate.parse(date);
             String formatDate = formatDate(localDate);
-            ArrayList<Integer> weekdays = new ArrayList();
+            List<Integer> weekdays = new ArrayList();
+            Map<Integer, Integer> distanceByWeek = new HashMap<>();
 
         for (int i = 0; i < getMonth().size(); i++) {
 
@@ -86,10 +88,12 @@ public class MonthlyTableController {
                 Entry newEntry = new Entry();
                 newEntry.setDate(formatMonth().get(i));
 
+
                 if (formatMonth().get(i).equals(formatDate)) {
                     newEntry.setDistance(distance);
                     newEntry.setTime(time);
                     newEntry.setSpeed(speed);
+
                 }
                 entryRepository.save(newEntry);
             } else {
@@ -104,39 +108,47 @@ public class MonthlyTableController {
                 int dayNumber = dayOfWeek.getValue();
                 weekdays.add(dayNumber);
 
-                if (dayNumber == 6) {
-
-                    String dayToCheck = formatDate(getMonth().get(i));
-                    ArrayList<Integer> allDistances = new ArrayList<>();
+                LocalDate weekday = getMonth().get(i);
+                int week = weekday.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
 
 
-                    try {
-                        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cyclingrecord", "cyclingrecord", "Hmveonl00");
-                        String sql = ("SELECT * FROM entry LIMIT 7");
-                        PreparedStatement ps = con.prepareStatement(sql);
-                        ResultSet rs = ps.executeQuery();
+                String dayToCheck = formatDate(getMonth().get(i));
+                ArrayList<Integer> allDistances = new ArrayList<>();
 
-                        while (rs.next()) {
-                            String dateToMatch = rs.getString("date");
-                            int distanceToSum = rs.getInt("distance");
-                            allDistances.add(distanceToSum);
-                            int allDistancesTotal = sumDistance(allDistances);
 
+                try {
+                    Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cyclingrecord", "cyclingrecord", "Hmveonl00");
+                    String sql = ("SELECT * FROM entry");
+                    PreparedStatement ps = con.prepareStatement(sql);
+                    ResultSet rs = ps.executeQuery();
+
+                    while (rs.next()) {
+
+                        String dateToMatch = rs.getString("date");
+                        int distanceToSum = rs.getInt("distance");
+                        allDistances.add(distanceToSum);
+
+                        distanceByWeek.put(week, distanceToSum);
+                        System.out.println(distanceByWeek);
+
+                        int allDistancesTotal = sumDistance(allDistances);
+                        if (dayNumber == 6) {
                             existingDate.setTotalDistance(allDistancesTotal);
-
                             entryRepository.save(existingDate);
                         }
-                        rs.close();
-                        ps.close();
-                        con.close();
-                    } catch (SQLException ex) {
-                        System.out.println(ex.getMessage());
                     }
+
+                    rs.close();
+                    ps.close();
+                    con.close();
+                } catch (SQLException ex) {
+                    System.out.println(ex.getMessage());
+                }
 
                 }
                 model.addAttribute("entries", entryRepository.findAll());
             }
-        }
+
         }
         return "monthly";
     }
