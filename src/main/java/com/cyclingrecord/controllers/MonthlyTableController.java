@@ -66,6 +66,14 @@ public class MonthlyTableController {
         return sum;
     }
 
+    public static float sum(List<Float> list) {
+        int sum = 0;
+        for (float i: list) {
+            sum += i;
+        }
+        return sum;
+    }
+
 
     @RequestMapping("monthly")
     public String showMonthlyTable(@ModelAttribute Entry entry, Model model, @RequestParam(required=false) String date, @RequestParam(required=false) Float distance, @RequestParam(required=false) Float time) throws Exception {
@@ -76,9 +84,15 @@ public class MonthlyTableController {
             LocalDate localDate = LocalDate.parse(date);
             String formatDate = formatDate(localDate);
             List<Integer> weekdays = new ArrayList();
-            Map<Integer, Integer> distanceByWeek = new HashMap<>();
+            Map<Integer, List<Float>> distanceByWeek = new HashMap<>();
 
         for (int i = 0; i < getMonth().size(); i++) {
+            DayOfWeek dayOfWeek = getMonth().get(i).getDayOfWeek();
+            int dayNumber = dayOfWeek.getValue();
+            weekdays.add(dayNumber);
+
+            LocalDate weekday = getMonth().get(i);
+            int week = weekday.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
 
             double speed = Math.round((distance / (time / 60)) * 100.0) / 100.0;
             Entry existingDate = entryRepository.findByDate(formatMonth().get(i));
@@ -104,12 +118,18 @@ public class MonthlyTableController {
 
                     entryRepository.save(existingDate);
                 }
-                DayOfWeek dayOfWeek = getMonth().get(i).getDayOfWeek();
-                int dayNumber = dayOfWeek.getValue();
-                weekdays.add(dayNumber);
-
-                LocalDate weekday = getMonth().get(i);
-                int week = weekday.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
+//                DayOfWeek dayOfWeek = getMonth().get(i).getDayOfWeek();
+//                int dayNumber = dayOfWeek.getValue();
+//                weekdays.add(dayNumber);
+//
+//                LocalDate weekday = getMonth().get(i);
+//                int week = weekday.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
+                List<Float> distances = new ArrayList<>();
+                distances.add(existingDate.getDistance());
+                for (Float listOfDistances : distances) {
+                    distanceByWeek.computeIfAbsent(week, k -> new ArrayList<>()).add(listOfDistances);
+                }
+                //distanceByWeek.put(week, distances);
 
 
                 String dayToCheck = formatDate(getMonth().get(i));
@@ -128,8 +148,7 @@ public class MonthlyTableController {
                         int distanceToSum = rs.getInt("distance");
                         allDistances.add(distanceToSum);
 
-                        distanceByWeek.put(week, distanceToSum);
-                        System.out.println(distanceByWeek);
+
 
                         int allDistancesTotal = sumDistance(allDistances);
                         if (dayNumber == 6) {
@@ -147,9 +166,18 @@ public class MonthlyTableController {
 
                 }
                 model.addAttribute("entries", entryRepository.findAll());
+            if (week == 16 && dayNumber == 6) {
+                existingDate.setTotalDistance(sum(distanceByWeek.get(16)));
             }
-
+                else if(week == 17 && dayNumber == 6){
+                    existingDate.setTotalDistance(sum(distanceByWeek.get(17)));
+                }
+                entryRepository.save(existingDate);
         }
+         }
+
+
+
         return "monthly";
     }
 }
