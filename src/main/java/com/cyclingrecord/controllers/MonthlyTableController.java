@@ -27,7 +27,7 @@ public class MonthlyTableController {
 
     public ArrayList<LocalDate> getMonth() {
         ArrayList<LocalDate> entireMonth = new ArrayList<>();
-        int getMonth = Calendar.getInstance().get(Calendar.MONTH) + 1;
+        int getMonth = Calendar.getInstance().get(Calendar.MONTH)+1;
         YearMonth currentMonth = YearMonth.of(2020, getMonth);
         for (int i = 1; i < currentMonth.lengthOfMonth() + 1; i++) {
             LocalDate ld = currentMonth.atDay(i);
@@ -39,13 +39,6 @@ public class MonthlyTableController {
     public String formatDate(LocalDate dateToFormat) {
         LocalDate ld = dateToFormat;
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MMM");
-        String dayString = ld.format(myFormatObj);
-        return dayString;
-    }
-
-    public String formatDateToMatch(LocalDate dateToFormat) {
-        LocalDate ld = dateToFormat;
-        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String dayString = ld.format(myFormatObj);
         return dayString;
     }
@@ -135,46 +128,35 @@ public class MonthlyTableController {
                 String dayToCheck = formatDate(getMonth().get(i));
                 ArrayList<Integer> allDistances = new ArrayList<>();
 
+//                try {
+//                    Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cyclingrecord", "cyclingrecord", "Hmveonl00");
+//                    String sql = ("SELECT * FROM entry");
+//                    PreparedStatement ps = con.prepareStatement(sql);
+//                    ResultSet rs = ps.executeQuery();
+//
+//                    while (rs.next()) {
+//                        String dateToMatch = rs.getString("date");
+//                        int distanceToSum = rs.getInt("distance");
+//                        allDistances.add(distanceToSum);
+//                    }
 
-                try {
-                    Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cyclingrecord", "cyclingrecord", "Hmveonl00");
-                    String sql = ("SELECT * FROM entry");
-                    PreparedStatement ps = con.prepareStatement(sql);
-                    ResultSet rs = ps.executeQuery();
+//                    rs.close();
+//                    ps.close();
+//                    con.close();
+//                } catch (SQLException ex) {
+//                    System.out.println(ex.getMessage());
+//                }
 
-                    while (rs.next()) {
-
-                        String dateToMatch = rs.getString("date");
-                        int distanceToSum = rs.getInt("distance");
-                        allDistances.add(distanceToSum);
-
-
-
-                        int allDistancesTotal = sumDistance(allDistances);
-                        if (dayNumber == 6) {
-                            existingDate.setTotalDistance(allDistancesTotal);
-                            entryRepository.save(existingDate);
-                        }
-                    }
-
-                    rs.close();
-                    ps.close();
-                    con.close();
-                } catch (SQLException ex) {
-                    System.out.println(ex.getMessage());
-                }
-
-                }
-                model.addAttribute("entries", entryRepository.findAll());
-            if (week == 16 && dayNumber == 6) {
-                existingDate.setTotalDistance(sum(distanceByWeek.get(16)));
             }
-                else if(week == 17 && dayNumber == 6){
-                    existingDate.setTotalDistance(sum(distanceByWeek.get(17)));
+            model.addAttribute("entries", entryRepository.findAll());
+            for(int j = 0; j<getMonth().size(); j++) {
+                if (distanceByWeek.containsKey(j) && dayNumber == 7) {
+                    existingDate.setTotalDistance(sum(distanceByWeek.get(j)));
                 }
+            }
                 entryRepository.save(existingDate);
         }
-         }
+        }
 
 
 
