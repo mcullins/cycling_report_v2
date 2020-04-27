@@ -24,7 +24,7 @@ public class InputController {
     }
 
     @PostMapping("/form")
-    public String processInput(Model model, Entry newEntry, @RequestParam(required=false) String date, @RequestParam(required=false) Float time, @RequestParam(required=false) Float distance) {
+    public String processInput(Entry newEntry, @RequestParam(required=false) String date, @RequestParam(required=false) Float time, @RequestParam(required=false) Float distance) {
         entryRepository.save(newEntry);
         return "monthly";
     }

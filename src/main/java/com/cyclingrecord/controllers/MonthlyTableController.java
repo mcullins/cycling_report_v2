@@ -51,14 +51,6 @@ public class MonthlyTableController {
         return dateString;
     }
 
-    public Integer sumDistance(List<Integer> distances) {
-        int sum = 0;
-        for (int distance : distances) {
-            sum += distance;
-        }
-        return sum;
-    }
-
     public static float sum(List<Float> list) {
         int sum = 0;
         for (float i: list) {
@@ -80,27 +72,17 @@ public class MonthlyTableController {
             Map<Integer, List<Float>> distanceByWeek = new HashMap<>();
 
         for (int i = 0; i < getMonth().size(); i++) {
-            DayOfWeek dayOfWeek = getMonth().get(i).getDayOfWeek();
-            int dayNumber = dayOfWeek.getValue();
-            weekdays.add(dayNumber);
-
-            LocalDate weekday = getMonth().get(i);
-            int week = weekday.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
-
             double speed = Math.round((distance / (time / 60)) * 100.0) / 100.0;
             Entry existingDate = entryRepository.findByDate(formatMonth().get(i));
-
 
             if (existingDate == null || !formatMonth().get(i).equals(existingDate.getDate())) {
                 Entry newEntry = new Entry();
                 newEntry.setDate(formatMonth().get(i));
 
-
                 if (formatMonth().get(i).equals(formatDate)) {
                     newEntry.setDistance(distance);
                     newEntry.setTime(time);
                     newEntry.setSpeed(speed);
-
                 }
                 entryRepository.save(newEntry);
             } else {
@@ -111,22 +93,49 @@ public class MonthlyTableController {
 
                     entryRepository.save(existingDate);
                 }
+
+                DayOfWeek dayOfWeek = getMonth().get(i).getDayOfWeek();
+                int dayNumber = dayOfWeek.getValue();
+                weekdays.add(dayNumber);
+
+                LocalDate weekday = getMonth().get(i);
+                int week = weekday.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
+
+                if (existingDate == null || !formatMonth().get(i).equals(existingDate.getDate())) {
+                    Entry newEntry = new Entry();
+                    newEntry.setDate(formatMonth().get(i));
+
+                    if (formatMonth().get(i).equals(formatDate)) {
+                        newEntry.setDistance(distance);
+                        newEntry.setTime(time);
+                        newEntry.setSpeed(speed);
+
+                    }
+                    entryRepository.save(newEntry);
+                } else {
+                    if (formatMonth().get(i).equals(formatDate)) {
+                        existingDate.setTime(time);
+                        existingDate.setDistance(distance);
+                        existingDate.setSpeed(speed);
+
+                        entryRepository.save(existingDate);
+                    }
 //                DayOfWeek dayOfWeek = getMonth().get(i).getDayOfWeek();
 //                int dayNumber = dayOfWeek.getValue();
 //                weekdays.add(dayNumber);
 //
 //                LocalDate weekday = getMonth().get(i);
 //                int week = weekday.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
-                List<Float> distances = new ArrayList<>();
-                distances.add(existingDate.getDistance());
-                for (Float listOfDistances : distances) {
-                    distanceByWeek.computeIfAbsent(week, k -> new ArrayList<>()).add(listOfDistances);
-                }
-                //distanceByWeek.put(week, distances);
 
+                    List<Float> distances = new ArrayList<>();
+                    distances.add(existingDate.getDistance());
+                    for (Float listOfDistances : distances) {
+                        distanceByWeek.computeIfAbsent(week, k -> new ArrayList<>()).add(listOfDistances);
+                    }
+                    //distanceByWeek.put(week, distances);
 
-                String dayToCheck = formatDate(getMonth().get(i));
-                ArrayList<Integer> allDistances = new ArrayList<>();
+//                String dayToCheck = formatDate(getMonth().get(i));
+//                ArrayList<Integer> allDistances = new ArrayList<>();
 
 //                try {
 //                    Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cyclingrecord", "cyclingrecord", "Hmveonl00");
@@ -147,21 +156,21 @@ public class MonthlyTableController {
 //                    System.out.println(ex.getMessage());
 //                }
 
-            }
-            model.addAttribute("entries", entryRepository.findAll());
-            for(int j = 0; j<getMonth().size(); j++) {
-                if (distanceByWeek.containsKey(j) && dayNumber == 7) {
-                    existingDate.setTotalDistance(sum(distanceByWeek.get(j)));
+                }
+                model.addAttribute("entries", entryRepository.findAll());
+                for (int j = 0; j < getMonth().size(); j++) {
+                    if (distanceByWeek.containsKey(j) && dayNumber == 7) {
+                        existingDate.setTotalDistance(sum(distanceByWeek.get(j)));
+                    }
                 }
             }
-                entryRepository.save(existingDate);
+            entryRepository.save(existingDate);
         }
         }
-
-
-
         return "monthly";
     }
 }
+
+
 
 
