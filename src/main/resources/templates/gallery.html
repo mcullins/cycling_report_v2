@@ -7,15 +7,15 @@
 <nav th:replace="fragments :: navbar"></nav>
 
 <h4>Upload Picture:</h4>
-<form method="POST" enctype="multipart/form-data" th:action="@{/upload-file}">
-    <input type="file" name="file"> <br/><br/>
+<form method="POST" enctype="multipart/form-data">
+    <input type="file" name="image"> <br/><br/>
     <button type="submit">Submit</button>
 </form>
 
 <h2>Uploaded Files:</h2>
 <ul>
-    <li th:each="file : ${files}">
-        <a th:href="${file}" target="_blank" th:text="${file}"></a>
+    <li th:each="image : ${imageList}" >
+        <img th:src="*{'data:image/png;base64,'+ imageList}" />
     </li>
 </ul>
 

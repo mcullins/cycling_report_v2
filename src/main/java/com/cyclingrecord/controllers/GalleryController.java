@@ -1,10 +1,14 @@
 package com.cyclingrecord.controllers;
 
-
-import com.cyclingrecord.FileResponse;
-import com.cyclingrecord.services.StorageService;
+import com.cyclingrecord.models.DBFile;
+import com.cyclingrecord.models.Entry;
+import com.cyclingrecord.payload.UploadFileResponse;
+import com.cyclingrecord.services.DBFileStorageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,50 +16,40 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.MalformedURLException;
-import java.util.stream.Collectors;
-
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class GalleryController {
-    private StorageService storageService;
+    private static final Logger logger = LoggerFactory.getLogger(GalleryController.class);
 
-    public GalleryController(StorageService storageService){
-        this.storageService = storageService;
+    @Autowired
+    private DBFileStorageService dbFileStorageService;
+
+    @PostMapping("/gallery")
+    public UploadFileResponse uploadImage(@RequestParam("image")MultipartFile image){
+        DBFile dbFile = dbFileStorageService.storeImage(image);
+
+        String imageDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/gallery")
+                .path(dbFile.getId())
+                .toUriString();
+
+        return new UploadFileResponse(dbFile.getName(), imageDownloadUri, image.getSize());
     }
 
     @GetMapping("/gallery")
-    public String listAllFiles(Model model){
-        model.addAttribute("files", storageService.loadAll().map(
-                path -> ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/download/")
-                .path(path.getFileName().toString())
-                .toUriString())
-                .collect(Collectors.toList()));
+    public String downloadImage(Model model) {
+        ArrayList<DBFile> imageList = new ArrayList<>();
+        imageList = dbFileStorageService.getImage();
+        for(int i = 0; i<imageList.size(); i++) {
+            model.addAttribute("imageList",
+                    Base64.getEncoder().encodeToString(imageList.get(i).getImage()));
+        }
         return "gallery";
     }
-
-    @GetMapping("/download/{filename;.+")
-    @ResponseBody
-    public ResponseEntity<Resource> downloadFile(@PathVariable String filename) throws MalformedURLException {
-        Resource resource = storageService.loadAsResource(filename);
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment; filename=\"" + resource.getFilename() + "\"")
-                .body(resource);
-    }
-
-    @PostMapping("/upload-file")
-    @ResponseBody
-    public FileResponse uploadFile(@RequestParam("file") MultipartFile file){
-        String name = storageService.store(file);
-        String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/download/")
-                .path(name)
-                .toUriString();
-
-        return new FileResponse(name, uri, file.getContentType(), file.getSize());
-    }
-
 }
+
 
