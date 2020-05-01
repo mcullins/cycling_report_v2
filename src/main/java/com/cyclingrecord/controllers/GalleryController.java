@@ -28,8 +28,18 @@ public class GalleryController {
     @Autowired
     private DBFileStorageService dbFileStorageService;
 
+    public ArrayList<String> encodeImages(){
+        ArrayList<DBFile> imageList = new ArrayList<>();
+        ArrayList<String> encodedList = new ArrayList<>();
+        imageList = dbFileStorageService.getImage();
+        for(int i = 0; i<imageList.size(); i++) {
+            encodedList.add(Base64.getEncoder().encodeToString(imageList.get(i).getImage()));
+        }
+        return encodedList;
+    }
+
     @PostMapping("/gallery")
-    public UploadFileResponse uploadImage(@RequestParam("image")MultipartFile image){
+    public UploadFileResponse uploadImage(Model model, @RequestParam("image")MultipartFile image){
         DBFile dbFile = dbFileStorageService.storeImage(image);
 
         String imageDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -37,17 +47,14 @@ public class GalleryController {
                 .path(dbFile.getId())
                 .toUriString();
 
+        model.addAttribute("imageList", encodeImages());
+
         return new UploadFileResponse(dbFile.getName(), imageDownloadUri, image.getSize());
     }
 
     @GetMapping("/gallery")
     public String downloadImage(Model model) {
-        ArrayList<DBFile> imageList = new ArrayList<>();
-        imageList = dbFileStorageService.getImage();
-        for(int i = 0; i<imageList.size(); i++) {
-            model.addAttribute("imageList",
-                    Base64.getEncoder().encodeToString(imageList.get(i).getImage()));
-        }
+        model.addAttribute("imageList", encodeImages());
         return "gallery";
     }
 }
