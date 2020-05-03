@@ -1,15 +1,12 @@
 package com.cyclingrecord.controllers;
 
+import com.cyclingrecord.data.DBFileRepository;
 import com.cyclingrecord.models.DBFile;
-import com.cyclingrecord.models.Entry;
 import com.cyclingrecord.payload.UploadFileResponse;
 import com.cyclingrecord.services.DBFileStorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,15 +15,16 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
 
 @Controller
-public class GalleryController {
+public class GalleryController{
     private static final Logger logger = LoggerFactory.getLogger(GalleryController.class);
 
     @Autowired
     private DBFileStorageService dbFileStorageService;
+
+    @Autowired
+    private DBFileRepository dbFileRepository;
 
     public ArrayList<String> encodeImages(){
         ArrayList<DBFile> imageList = new ArrayList<>();
@@ -54,9 +52,29 @@ public class GalleryController {
 
     @GetMapping("/gallery")
     public String downloadImage(Model model) {
+
         model.addAttribute("imageList", encodeImages());
         return "gallery";
     }
+
+    @GetMapping("deleteImages")
+    public String displayDeleteEventForm(Model model) {
+        model.addAttribute("images", dbFileRepository.findAll());
+        return "deleteImages";
+    }
+
+    @PostMapping("deleteImages")
+    public String processDeleteEventsForm(@RequestParam(required = false) String[] images) {
+
+        if (images != null) {
+            for (String image : images) {
+                dbFileRepository.deleteById(image);
+            }
+        }
+
+        return "redirect:/gallery";
+    }
+
 }
 
 

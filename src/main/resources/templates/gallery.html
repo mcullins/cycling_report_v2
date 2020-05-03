@@ -9,7 +9,8 @@
 <h2>Upload Picture:</h2>
 <form method="POST" enctype="multipart/form-data">
     <input type="file" name="image"> <br/><br/>
-    <button type="submit" onclick="submitImage()">Submit</button>
+    <button type="submit" onclick="submitImage()" class="btn btn-primary">Submit</button>
+    <a th:href="@{/deleteImages}" class="btn btn-primary">Delete Images</a>
 </form>
 
 <h2>Gallery</h2>

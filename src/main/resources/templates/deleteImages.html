@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <h1 th:replace = "fragments :: head"></h1>
+</head>
+<body>
+<nav th:replace="fragments :: navbar"></nav>
+<div class="container">
+    <form method="post">
+
+        <th:block th:each="image : ${images}">
+            <div class="form-group">
+                <label>
+                    <span th:text="${image.name}"></span>
+                    <input type="checkbox" name="images" th:value="${image.id}" class="form-control">
+                </label>
+            </div>
+        </th:block>
+
+        <input type="submit" value="Delete" class="btn btn-danger">
+    </form>
+</div>
+</body>
+</html>
