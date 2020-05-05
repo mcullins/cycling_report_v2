@@ -78,6 +78,9 @@ public class MonthlyTableController {
             if (existingDate == null || !formatMonth().get(i).equals(existingDate.getDate())) {
                 Entry newEntry = new Entry();
                 newEntry.setDate(formatMonth().get(i));
+                newEntry.setDistance(0.0f);
+                newEntry.setTime(0.0f);
+                newEntry.setSpeed(0);
 
                 if (formatMonth().get(i).equals(formatDate)) {
                     newEntry.setDistance(distance);
@@ -120,42 +123,12 @@ public class MonthlyTableController {
 
                         entryRepository.save(existingDate);
                     }
-//                DayOfWeek dayOfWeek = getMonth().get(i).getDayOfWeek();
-//                int dayNumber = dayOfWeek.getValue();
-//                weekdays.add(dayNumber);
-//
-//                LocalDate weekday = getMonth().get(i);
-//                int week = weekday.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
 
                     List<Float> distances = new ArrayList<>();
                     distances.add(existingDate.getDistance());
                     for (Float listOfDistances : distances) {
                         distanceByWeek.computeIfAbsent(week, k -> new ArrayList<>()).add(listOfDistances);
                     }
-                    //distanceByWeek.put(week, distances);
-
-//                String dayToCheck = formatDate(getMonth().get(i));
-//                ArrayList<Integer> allDistances = new ArrayList<>();
-
-//                try {
-//                    Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cyclingrecord", "cyclingrecord", "Hmveonl00");
-//                    String sql = ("SELECT * FROM entry");
-//                    PreparedStatement ps = con.prepareStatement(sql);
-//                    ResultSet rs = ps.executeQuery();
-//
-//                    while (rs.next()) {
-//                        String dateToMatch = rs.getString("date");
-//                        int distanceToSum = rs.getInt("distance");
-//                        allDistances.add(distanceToSum);
-//                    }
-
-//                    rs.close();
-//                    ps.close();
-//                    con.close();
-//                } catch (SQLException ex) {
-//                    System.out.println(ex.getMessage());
-//                }
-
                 }
                 model.addAttribute("entries", entryRepository.findAll());
                 for (int j = 0; j < getMonth().size(); j++) {
@@ -164,7 +137,9 @@ public class MonthlyTableController {
                     }
                 }
             }
-            entryRepository.save(existingDate);
+            if(existingDate != null) {
+                entryRepository.save(existingDate);
+            }
         }
         }
         return "monthly";

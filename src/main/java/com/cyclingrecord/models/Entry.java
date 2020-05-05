@@ -12,7 +12,7 @@ public class Entry extends AbstractEntity{
     private double speed;
     private Float time;
     private Float distance;
-    private float totalDistance;
+    private Float totalDistance;
 
     public Entry(){ }
 
