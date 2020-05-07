@@ -2,7 +2,9 @@ package com.cyclingrecord.controllers;
 
 
 import com.cyclingrecord.data.EntryRepository;
+import com.cyclingrecord.data.YearTotalsRepository;
 import com.cyclingrecord.models.Entry;
+import com.cyclingrecord.models.YearTotals;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.sql.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.Year;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.IsoFields;
@@ -20,10 +23,13 @@ import java.util.*;
 
 
 @Controller
-public class MonthlyTableController {
+public class ChartController {
 
     @Autowired
     private EntryRepository entryRepository;
+
+    @Autowired
+    private YearTotalsRepository yearTotalsRepository;
 
     public ArrayList<LocalDate> getMonth() {
         ArrayList<LocalDate> entireMonth = new ArrayList<>();
@@ -144,6 +150,18 @@ public class MonthlyTableController {
         }
         return "monthly";
     }
+
+    @RequestMapping("/yearly")
+    public String yearTotalChart(Model model){
+        YearTotals yearTotals = new YearTotals();
+        if(yearTotals==(null)){
+            yearTotals.setYear(Year.now().getValue();
+        }
+
+        model.addAttribute("yearTotals", yearTotalsRepository.findAll());
+        return "yearly";
+    }
+
 }
 
 
