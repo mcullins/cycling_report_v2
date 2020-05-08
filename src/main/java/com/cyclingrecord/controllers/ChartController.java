@@ -12,11 +12,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.sql.*;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.Year;
-import java.time.YearMonth;
+import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.IsoFields;
 import java.util.*;
@@ -63,6 +61,16 @@ public class ChartController {
             sum += i;
         }
         return sum;
+    }
+
+    public ArrayList<String> getYearlyMonths(){
+        ArrayList<String> monthsList = new ArrayList<String>();
+        String[] months = new DateFormatSymbols().getMonths();
+        for (int i = 0; i < months.length; i++) {
+            String month = months[i];
+            monthsList .add(months[i]);
+        }
+        return monthsList;
     }
 
 
@@ -153,9 +161,17 @@ public class ChartController {
 
     @RequestMapping("/yearly")
     public String yearTotalChart(Model model){
-        YearTotals yearTotals = new YearTotals();
-        if(yearTotals==(null)){
-            yearTotals.setYear(Year.now().getValue();
+
+            for(int i = 0; i<12; i++){
+
+                    YearTotals yearTotals = new YearTotals();
+
+                    yearTotals.setMonth(getYearlyMonths().get(i));
+                    yearTotals.setYear(Year.now().getValue());
+                    yearTotals.setTotal(0);
+                    yearTotals.setGrandTotal(0);
+
+                yearTotalsRepository.save(yearTotals);
         }
 
         model.addAttribute("yearTotals", yearTotalsRepository.findAll());

@@ -5,25 +5,25 @@ import javax.persistence.Entity;
 @Entity
 public class YearTotals extends AbstractEntity{
 
-    private int year;
+    private Integer year;
     private String month;
     private int total;
     private int grandTotal;
 
     public YearTotals(){}
 
-    public YearTotals(int year, String month, int total, int grandTotal){
+    public YearTotals(Integer year, String month, int total, int grandTotal){
         this.year = year;
         this.month = month;
         this.total = total;
         this.grandTotal = grandTotal;
     }
 
-    public int getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(int year) {
+    public void setYear(Integer year) {
         this.year = year;
     }
 
