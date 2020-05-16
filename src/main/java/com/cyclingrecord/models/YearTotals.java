@@ -7,16 +7,18 @@ public class YearTotals extends AbstractEntity{
 
     private Integer year;
     private String month;
-    private int total;
+    private Float total;
     private int grandTotal;
+    private String monthAbbr;
 
     public YearTotals(){}
 
-    public YearTotals(Integer year, String month, int total, int grandTotal){
+    public YearTotals(Integer year, String month, Float total, int grandTotal, String monthAbbr){
         this.year = year;
         this.month = month;
         this.total = total;
         this.grandTotal = grandTotal;
+        this.monthAbbr = monthAbbr;
     }
 
     public Integer getYear() {
@@ -35,11 +37,11 @@ public class YearTotals extends AbstractEntity{
         this.month = month;
     }
 
-    public int getTotal() {
+    public Float getTotal() {
         return total;
     }
 
-    public void setTotal(int total) {
+    public void setTotal(Float total) {
         this.total = total;
     }
 
@@ -49,5 +51,13 @@ public class YearTotals extends AbstractEntity{
 
     public void setGrandTotal(int grandTotal) {
         this.grandTotal = grandTotal;
+    }
+
+    public String getMonthAbbr() {
+        return monthAbbr;
+    }
+
+    public void setMonthAbbr(String monthAbbr) {
+        this.monthAbbr = monthAbbr;
     }
 }

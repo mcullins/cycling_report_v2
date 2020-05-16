@@ -5,5 +5,20 @@
 </head>
 <body>
 <nav th:replace="fragments :: navbar"></nav>
+<div class="container">
+    <button type="button" class="btn btn-primary" onclick="window.location.href = '/form';">Return to Entry Form</button>
+    <table class="table table-sm table-bordered" >
+        <thead class="thead-light">
+        <tr>
+            <th th:text = "${yearNumber}" scope="col" colspan="2">Date</th>
+        </tr>
+        </thead>
+        <tr th:each= "month : ${yearTotals}">
+            <td th:text = ${month.month}></td>
+            <td th:text = ${month.total}></td>
+        </tr>
+    </table>
+
+</div>
 </body>
 </html>
