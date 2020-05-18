@@ -214,51 +214,13 @@ public class ChartController {
                 monthAbbrList.add(monthResultSet.getString("month_abbr"));
             }
 
-            //Get array of dates by month
-            PreparedStatement SingleMonthStmt = conn.prepareStatement("SELECT date FROM cyclingrecord.entry");
-            // " WHERE date LIKE CONCAT('%',?)");
-
-            //   for(int i = 1; i<12; i++) {
-            //     SingleMonthStmt.setString(1, monthAbbrList.get(i));
-            // }
-            ResultSet SingleMonthResultSet = SingleMonthStmt.executeQuery();
-
-            while (SingleMonthResultSet.next()) {
-                //       System.out.println(SingleMonthResultSet.getString(1));
-                dateCombinationByMonth.add(SingleMonthResultSet.getString(1));
-            }
-//            for (int i = 0; i < dateCombinationByMonth.size(); i++) {
-//                if (dateCombinationByMonth.get(i).contains(monthAbbrList.get(i))) {
-//
-//                }
-//            }
-
-
-            //Get array of distances by month abbreviation matches
-            Float sumMonthTotals = 0.0f;
-            PreparedStatement sumStmt = conn.prepareStatement("SELECT distance FROM cyclingrecord.entry WHERE date LIKE CONCAT('%',?)");
-
-            for (int i = 0; i < monthAbbrList.size(); i++) {
-                sumStmt.setString(1, monthAbbrList.get(i));
-                ResultSet sumResultSet = sumStmt.executeQuery();
-
-                while (sumResultSet.next()) {
-                    monthTotals.add(sumResultSet.getFloat("distance"));
-                    sumMonthTotals = sum(monthTotals);
-                }
-            }
-
-
-
                 for (int j = 0; j < dateCombinationByMonth.size(); j++) {
                     Iterable<YearTotals> existingYearTotals = yearTotalsRepository.findAll();
                     String day = dateCombinationByMonth.get(j);
                     Float monthlyDistance = monthTotals.get(j);
 
                     distanceByMonth.put(day, monthlyDistance);
-
-
-
+                }
                     Map<String, Float> result = new HashMap<>();
                     for(Map.Entry<String, Float> distByMonth : distanceByMonth.entrySet()){
                         String key = distByMonth.getKey().split("-")[1];
@@ -267,28 +229,24 @@ public class ChartController {
                         result.put(key, oldValue + value);
                     }
 
+            Iterable<YearTotals> existingYearTotals = yearTotalsRepository.findAll();
                     for (YearTotals exYearTotals : existingYearTotals) {
-
-                        for(Map.Entry<String, Float> entry : result.entrySet()) {
-
+                        for (String entry : result.keySet()) {
                             for(int k=0; k<12; k++){
-                                System.out.println(entry.getValue());
-                            if (entry.getKey().equals(monthAbbrList.get(k))) {
-                                exYearTotals.setTotal(entry.getValue());
+                                if (entry.equals(exYearTotals.getMonthAbbr())) {
+                                    exYearTotals.setTotal(result.get(entry));
+                                }
                             }
-                            }
+
                         }
                             exYearTotals.setYear(year);
                             exYearTotals.setGrandTotal(0);
                             yearTotalsRepository.save(exYearTotals);
                         }
 
-
                         if (multipleYearNums.contains(year)) {
                             yearNumber = year;
-                        }
                     }
-
 
                 model.addAttribute("yearNumber", yearNumber);
                 model.addAttribute("yearTotals", yearTotalsRepository.findAll());
