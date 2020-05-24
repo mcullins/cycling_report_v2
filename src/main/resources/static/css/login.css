@@ -1,0 +1,38 @@
+body{
+    background: url(../img/hero-image.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: 100% 100%;
+    text-align: center;
+}
+
+form{
+    display: inline-block;
+}
+
+.container{
+    padding: 20px;
+    width: 350px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 10px;
+    position: absolute;
+      top: 50%;
+      left: 50%;
+      -ms-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+}
+
+.form-group {
+    display: flex;
+    margin: 25px;
+
+}
+
+.nav li a{
+    color: white;
+}
+
+.logout a {
+    color: white !important;
+}

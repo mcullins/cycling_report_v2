@@ -2,11 +2,14 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 <head>
     <h1 th:replace = "fragments :: head"></h1>
+    <link rel = "stylesheet" th:href="@{../css/tables.css}" />
 </head>
 <body>
 <nav th:replace="fragments :: navbar"></nav>
 <div class="container">
-    <button type="button" class="btn btn-primary" onclick="window.location.href = '/form';">Return to Entry Form</button>
+    <div class="btn-container">
+        <button type="button" class="btn btn-primary" onclick="window.location.href = '/form';">Return to Entry Form</button>
+    </div>
     <table class="table table-sm table-bordered" >
         <thead class="thead-light">
         <tr>
@@ -18,7 +21,7 @@
             <td th:text = ${month.total}></td>
         </tr>
     </table>
-
+</br>
 </div>
 </body>
 </html>

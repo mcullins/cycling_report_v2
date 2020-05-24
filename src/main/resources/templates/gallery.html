@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 <head>
     <h1 th:replace = "fragments :: head"></h1>
+    <link rel = "stylesheet" th:href="@{../css/gallery.css}" />
 </head>
 <body>
 <nav th:replace="fragments :: navbar"></nav>
@@ -9,13 +10,17 @@
 <h2>Upload Picture:</h2>
 <form method="POST" enctype="multipart/form-data">
     <input type="file" name="image"> <br/><br/>
-    <button type="submit" onclick="submitImage()" class="btn btn-primary">Submit</button>
+    <button type="submit" onclick="submitImage()" class="btn btn-primary">Upload</button>
     <a th:href="@{/deleteImages}" class="btn btn-primary">Delete Images</a>
 </form>
 
 <h2>Gallery</h2>
         <div th:each="image : ${imageList}">
-            <img th:src="@{'data:image/jpeg;base64,'+ ${image}}"  width="100%"/>
+            <ul class="gallery">
+                <li class="gallery">
+                    <img th:src="@{'data:image/jpeg;base64,'+ ${image}}"  width="100%"/>
+                </li>
+            </ul>
         </div>
 </div>
 </body>

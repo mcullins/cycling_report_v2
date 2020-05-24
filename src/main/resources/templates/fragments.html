@@ -4,7 +4,14 @@
     <div th:fragment = "head">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-        <link rel = "stylesheet" th:href="@{/styles.css}" />
+        <link rel = "stylesheet" th:href="@{../css/styles.css}" />
+        <meta charset="UTF-8"/>
+        <title>Cycling Record</title>
+    </div>
+    <div th:fragment = "login-head">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <link rel = "stylesheet" th:href="@{../css/login.css}" />
         <meta charset="UTF-8"/>
         <title>Cycling Record</title>
     </div>
@@ -15,7 +22,7 @@
 
             <ul class="nav">
                 <li class="nav-item"><a class="nav-item" th:href="@{/monthly}">
-                    <img th:src="logo-via-logohub.png" height="40">
+                    <img th:src="@{/img/logo-via-logohub.png}" height="40">
                 </a>
                 </li>
                 <li class="nav-item"><a class="nav-link" th:href="@{/monthly}">Monthly Chart</a></li>
@@ -25,6 +32,14 @@
             <span class="nav-item logout"><a class="nav-link" th:href="@{/logout}">Log Out</a></span>
         </div>
     </div>
-
+    <div th:fragment = "login-navbar">
+        <div class="navbar sticky-top navbar-dark bg-primary navbar-default">
+            <ul class="nav">
+                <li class="nav-item"><a class="nav-item" th:href="@{/monthly}">
+                    <img th:src="@{/img/logo-via-logohub.png}" height="40">
+                </a></li>
+            </ul>
+        </div>
+    </div>
 </body>
 </html>

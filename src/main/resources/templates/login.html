@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns: th="http://www.thymeleaf.org">
-<head th:replace="fragments :: head"></head>
+<head>
+    <h1 th:replace = "fragments :: login-head"></h1>
+</head>
 
-<body>
-<nav th:replace="fragments :: navbar"></nav>
+<body class="login">
+<nav th:replace = "fragments :: login-navbar"></nav>
 <div class="container">
 <form method="post">
     <div class="form-group">

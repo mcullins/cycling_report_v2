@@ -21,7 +21,7 @@ public class AuthenticationFilter extends HandlerInterceptorAdapter {
     @Autowired
     AuthenticationController authenticationController;
 
-    public static final List<String> whitelist = Arrays.asList("/login", "/register", "/logout", "/styles.css", "/logo-via-logohub.png");
+    public static final List<String> whitelist = Arrays.asList("/login", "/register", "/logout", "/css/login.css", "/img/logo-via-logohub.png", "/img/hero-image.jpg");
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
