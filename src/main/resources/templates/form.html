@@ -6,7 +6,8 @@
 </head>
 <body>
 <nav th:replace="fragments :: navbar"></nav>
-<div class="container">
+<div class="container center">
+    <div class="entry">
     <form th:action="@{/monthly}" method="post" class="form-group">
          <div class="input-align">
         <label>Date
@@ -29,6 +30,7 @@
         </label>
         </div>
     </form>
+    </div>
 </div>
 </body>
 <script type="text/javascript" th:src="@{/script.js}"></script>

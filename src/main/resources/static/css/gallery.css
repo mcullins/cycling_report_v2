@@ -11,20 +11,45 @@
   }
 }
 
-.gallery ul {
-  padding: 0;
-  @include clearfix;
+body{
+    background: url(../img/Beach.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: 100% 100%;
 }
 
-.gallery li {
-  list-style-type:none;
-  width: 100%;
-  border: 1px solid black;
-  margin: 20px;
-  box-shadow: 1px 3px 8px rgba(0,0,0,0.5);
+.container{
+    width: 100%;
+    margin:25px, auto, 25px, auto;
+
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 10px;
 }
 
 .center{
-    display: inline-block;
-    text-align: center;
+    width: 350px;
+    position: absolute;
+          top: 50%;
+          left: 50%;
+          -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+ul.gallery {
+  padding-left: 0;
+  list-style: none;
+  @include clearfix;
+}
+
+li.gallery {
+  padding-left: 0;
+  list-style-type:none;
+  width: 100%;
+  border: 1px solid black;
+  box-shadow: 1px 3px 8px rgba(0,0,0,0.5);
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }

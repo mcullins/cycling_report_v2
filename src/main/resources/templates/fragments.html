@@ -29,7 +29,16 @@
                 <li class="nav-item"><a class="nav-link" th:href="@{/yearly}">Yearly Chart</a></li>
                 <li class="nav-item"><a class="nav-link" th:href="@{/gallery}">Gallery</a></li>
             </ul>
-            <span class="nav-item logout"><a class="nav-link" th:href="@{/logout}">Log Out</a></span>
+            <span class="nav-item logout"><a class="nav-link" th:href="@{/logout}">Log Out Standard</a></span>
+            <a href="#" onclick="signOut();">Log Out Google</a>
+            <script>
+  function signOut() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+      console.log('User signed out.');
+    });
+  }
+</script>
         </div>
     </div>
     <div th:fragment = "login-navbar">

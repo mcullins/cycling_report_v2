@@ -2,23 +2,24 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 <head>
     <h1 th:replace = "fragments :: head"></h1>
+    <link rel = "stylesheet" th:href="@{../css/gallery.css}" />
 </head>
 <body>
 <nav th:replace="fragments :: navbar"></nav>
-<div class="container">
-    <div class="center">
+<div class="container center">
     <form method="post">
+        <div style="text-align:center">
             <th:block th:each="image : ${images}">
                 <div>
                     <label>
                         <span th:text="${image.name}"></span>
-                        <input type="checkbox" name="images" th:value="${image.id}" class="form-control center">
+                        <input type="checkbox" name="images" th:value="${image.id}" class="form-control">
                     </label>
                 </div>
             </th:block>
-        <input type="submit" value="Delete" class="btn btn-danger center">
+        <input type="submit" value="Delete" class="btn btn-danger">
+        </div>
     </form>
-    </div>
 </div>
 </body>
 </html>
