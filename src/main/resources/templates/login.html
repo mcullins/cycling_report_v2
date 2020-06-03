@@ -2,8 +2,7 @@
 <html lang="en" xmlns: th="http://www.thymeleaf.org">
 <head>
     <h1 th:replace = "fragments :: login-head"></h1>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <meta name="google-signin-client_id" content="205970030254-1eea40r91gs6dpdcmaql4m7kb841pi7r.apps.googleusercontent.com">
+
 </head>
 
 <body class="login">
@@ -27,15 +26,7 @@
 </form>
 
 <p>Don't have an account? <a href="/register">Register for one.</a></p>
-    <p>Or sign in with Google</p>
-    <div class="g-signin2" data-onsuccess="onSignIn"></div>
-    <script>function onSignIn(googleUser) {
-  var profile = googleUser.getBasicProfile();
-  console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-  console.log('Name: ' + profile.getName());
-  console.log('Image URL: ' + profile.getImageUrl());
-  console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-}</script>
+
 </div>
 </body>
 </html>

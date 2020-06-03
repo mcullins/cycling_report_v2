@@ -164,6 +164,23 @@ public class ChartController {
                 if (existingDate != null) {
                     entryRepository.save(existingDate);
                 }
+
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/cyclingrecord", "cyclingrecord", "Hmveonl00");
+
+                PreparedStatement yearStmt = conn.prepareStatement("SELECT date FROM cyclingrecord.entry");
+                ResultSet rs = yearStmt.executeQuery();
+                int count = 0;
+                while(rs.next()) {
+                    count++;
+                }
+                ArrayList<String> months = new ArrayList<>();
+                for(int j = 0; j< count; j++) {
+                    if (date.contains(formatMonth().get(j))) {
+                        months.add(formatMonth().get(j));
+                    }
+                }
+                model.addAttribute("months", months);
+                conn.close();
             }
         }
         return "monthly";

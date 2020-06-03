@@ -10,7 +10,10 @@
     <div class="btn-container">
         <button type="button" class="btn btn-primary" onclick="window.location.href = '/form';">Return to Entry Form</button>
     </div>
-
+    <select th:field="*{entries}">
+        <option th:each="mo : ${months}" th:value="${mo}" th:text="${mo}">
+        </option>
+    </select>
     <table class="table table-sm table-bordered" >
         <thead class="thead-light">
             <tr>
