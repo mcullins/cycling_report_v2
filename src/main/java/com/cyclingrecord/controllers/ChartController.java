@@ -164,7 +164,7 @@ public class ChartController {
                 if (existingDate != null) {
                     entryRepository.save(existingDate);
                 }
-
+/*
                 Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/cyclingrecord", "cyclingrecord", "Hmveonl00");
 
                 PreparedStatement yearStmt = conn.prepareStatement("SELECT date FROM cyclingrecord.entry");
@@ -181,7 +181,7 @@ public class ChartController {
                 }
                 model.addAttribute("months", months);
                 conn.close();
-            }
+*/            }
         }
         return "monthly";
     }
