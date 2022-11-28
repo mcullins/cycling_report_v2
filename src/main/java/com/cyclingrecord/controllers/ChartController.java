@@ -112,6 +112,7 @@ public class ChartController {
                         newEntry.setSpeed(speed);
                     }
                     entryRepository.save(newEntry);
+                    model.addAttribute("entries", entryRepository.findAll());
                 } else {
                     if (formatMonth().get(i).equals(formatDate)) {
                         existingDate.setTime(time);
