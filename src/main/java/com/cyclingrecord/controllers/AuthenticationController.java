@@ -77,6 +77,7 @@ public class AuthenticationController {
         setUserInSession(request.getSession(), newUser);
 
         return "redirect:/monthly";
+
     }
 
     @GetMapping("/logout")
