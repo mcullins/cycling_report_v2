@@ -34,11 +34,13 @@ How to add upload capabilities to a website How to create dynamic Java graph How
     8. Click "Apply"
 + Navigate in cloned repo to "src/main/resources/application.properties" and change "spring.datasource.username" variable
 to the user just created in MySQL Workbench as well as "spring.datasource.password" to the created password.
++ Navigate to "src/main/java/com.cyclingrecord/controllers/ChartController" and on line 184 change username and password as well
 + In a terminal, run `gradlew bootRun`. Application will be ready when output says something similar to:
 >2022-11-28 14:12:38.145  INFO 980 --- [  restartedMain] c.c.CyclingRecordApplication             : Started CyclingRecordApplication in 18.304 seconds (JVM running for 21.995)
 + Navigate to localhost:8080 in a browser window
 + Application should be running and ready for demo
     + Register for an account
     + Click "Return to Entry Form" and input data 
+    + Click "Yearly Chart" to view totals by year
     + Click "Gallery" and upload images (NOTE: to avoid images being too big for upload,
     please use images provided in the "static/example_pics" folder in this repo)
